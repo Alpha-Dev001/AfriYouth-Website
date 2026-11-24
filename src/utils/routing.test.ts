@@ -24,7 +24,7 @@ test('parsePathname handles legacy route aliases and query/hash stripping gracef
   assert.equal(parsePathname('/accelerator'), 'programs');
   assert.equal(parsePathname('/partner'), 'contact');
   assert.equal(parsePathname('/connect'), 'contact');
-  assert.equal(parsePathname('/unknown-route'), 'home');
+  assert.equal(parsePathname('/unknown-route'), 'not-found');
   assert.equal(normalizePathname('/Contact/'), '/contact');
 });
 

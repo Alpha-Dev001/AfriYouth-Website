@@ -1,4 +1,4 @@
-export type PageId = 'home' | 'about' | 'services' | 'programs' | 'contact';
+export type PageId = 'home' | 'about' | 'services' | 'programs' | 'contact' | 'not-found';
 
 export interface RouteMeta {
   id: PageId;
@@ -76,14 +76,24 @@ export function parsePathname(pathname: string): PageId {
   const matched = ROUTES.find((route) => route.path === normalized);
   if (matched) return matched.id;
   if (normalized in ROUTE_ALIASES) return ROUTE_ALIASES[normalized];
-  return 'home';
+  return 'not-found';
 }
 
 export function getPathForPage(pageId: PageId): string {
+  if (pageId === 'not-found') return '/';
   const matched = ROUTES.find((route) => route.id === pageId);
   return matched ? matched.path : '/';
 }
 
 export function getRouteMeta(pageId: PageId): RouteMeta {
+  if (pageId === 'not-found') {
+    return {
+      id: 'not-found',
+      path: '/',
+      label: 'Not Found',
+      title: 'Page Not Found — AfriYouth Innovation Labs',
+      description: 'The page you are looking for could not be found.',
+    };
+  }
   return ROUTES.find((route) => route.id === pageId) ?? ROUTES[0];
 }

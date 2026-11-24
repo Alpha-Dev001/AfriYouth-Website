@@ -4,6 +4,7 @@ import { AcceleratorSection } from './components/AcceleratorSection';
 import { ClosingAndFooter } from './components/ClosingAndFooter';
 import { ExpertiseSection } from './components/ExpertiseSection';
 import { HomePage } from './components/HomePage';
+import { NotFoundPage } from './components/NotFoundPage';
 import { FRAMER_EASE } from './components/MotionPrimitives';
 import { Navbar } from './components/Navbar';
 import { SiteFooter } from './components/SiteFooter';
@@ -105,6 +106,8 @@ export default function App() {
             onNavigate={(page) => navigate(page)}
           />
         );
+      case 'not-found':
+        return <NotFoundPage onNavigate={navigate} />;
       case 'home':
       default:
         return <HomePage onNavigate={navigate} />;
