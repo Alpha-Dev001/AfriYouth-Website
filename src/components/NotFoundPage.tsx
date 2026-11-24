@@ -1,33 +1,26 @@
-import type { MouseEvent } from 'react';
+'use client';
+
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, Home } from 'lucide-react';
 import { motion } from 'motion/react';
-import type { PageId } from '../utils/routing';
 import { getPathForPage } from '../utils/routing';
 import { FRAMER_EASE } from './MotionPrimitives';
 import { ResilientImage } from './ResilientImage';
 
-interface NotFoundPageProps {
-  onNavigate: (page: PageId) => void;
-}
+export function NotFoundPage() {
+  const router = useRouter();
 
-export function NotFoundPage({ onNavigate }: NotFoundPageProps) {
-  const handleHomeClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    onNavigate('home');
-  };
-
-  const handleBackClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleBackClick = () => {
     if (typeof window !== 'undefined' && window.history.length > 1) {
-      window.history.back();
+      router.back();
     } else {
-      onNavigate('home');
+      router.push(getPathForPage('home'));
     }
-    event.preventDefault();
   };
 
   return (
-    <main className="relative min-h-[calc(100vh-160px)] overflow-hidden bg-[#0D0624] text-white">
+    <section className="relative min-h-[calc(100vh-160px)] overflow-hidden bg-[#0D0624] text-white">
       <div className="absolute inset-0">
         <ResilientImage
           src="/images/team-collaboration.jpg"
@@ -89,24 +82,23 @@ export function NotFoundPage({ onNavigate }: NotFoundPageProps) {
           transition={{ duration: 0.5, delay: 0.32, ease: FRAMER_EASE }}
           className="mt-8 flex flex-col gap-3 sm:flex-row"
         >
-          <a
+          <Link
             href={getPathForPage('home')}
-            onClick={handleHomeClick}
             className="group inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#0301FF] px-6 py-3 font-display text-sm font-semibold text-white transition-colors hover:bg-white hover:text-[#0D0624]"
           >
             <Home className="h-4 w-4" aria-hidden="true" />
             <span>Back to home</span>
-          </a>
+          </Link>
           <button
             type="button"
             onClick={handleBackClick}
-            className="group inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-white/30 px-6 py-3 font-display text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10"
+            className="group inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-white/30 px-6 py-3 font-display text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" aria-hidden="true" />
             <span>Go back</span>
           </button>
         </motion.div>
       </div>
-    </main>
+    </section>
   );
 }

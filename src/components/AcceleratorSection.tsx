@@ -7,8 +7,7 @@ import {
   Lightbulb,
   Microscope,
 } from 'lucide-react';
-import { motion } from 'motion/react';
-import type { PageId } from '../utils/routing';
+import { getHrefForPage } from '../utils/routing';
 import {
   ImageReveal,
   Reveal,
@@ -16,14 +15,10 @@ import {
   RevealStagger,
   SlideReveal,
 } from './MotionPrimitives';
+import { MotionLink } from './MotionLink';
 import { PageBridge, PageHeader } from './PageHeader';
 import { ResilientImage } from './ResilientImage';
 import SplitText from './SplitText';
-
-interface AcceleratorSectionProps {
-  onNavigate: (page: PageId) => void;
-  onApplyClick: () => void;
-}
 
 interface FlagshipProgram {
   id: string;
@@ -123,7 +118,7 @@ const FLAGSHIP_PROGRAMS: FlagshipProgram[] = [
 
 const PROGRAM_ICONS = [Compass, Landmark, GraduationCap] as const;
 
-export function AcceleratorSection({ onNavigate, onApplyClick }: AcceleratorSectionProps) {
+export function AcceleratorSection() {
   return (
     <div className="bg-white text-[#0D0624]">
       <PageHeader
@@ -134,7 +129,6 @@ export function AcceleratorSection({ onNavigate, onApplyClick }: AcceleratorSect
         image="/images/team-collaboration.jpg"
         imageAlt="Young African innovator collaborating inside an experimental studio"
         imagePosition="object-[center_18%]"
-        onNavigate={onNavigate}
       />
 
       {/* Section 1: Program Architecture Split */}
@@ -196,9 +190,8 @@ export function AcceleratorSection({ onNavigate, onApplyClick }: AcceleratorSect
               </RevealStagger>
 
               <Reveal delay={0.14} className="mt-8">
-                <motion.button
-                  type="button"
-                  onClick={onApplyClick}
+                <MotionLink
+                  href={getHrefForPage('contact', 'innovator')}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.18 }}
@@ -209,7 +202,7 @@ export function AcceleratorSection({ onNavigate, onApplyClick }: AcceleratorSect
                     className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                     aria-hidden="true"
                   />
-                </motion.button>
+                </MotionLink>
               </Reveal>
             </SlideReveal>
 
@@ -218,6 +211,7 @@ export function AcceleratorSection({ onNavigate, onApplyClick }: AcceleratorSect
                 <ResilientImage
                   src="/images/youth-prototyping.jpg"
                   alt="Young African engineer assembling precision electronics prototypes in a studio"
+                  sizes="(max-width: 1024px) 92vw, 600px"
                   className="h-full w-full object-cover object-[center_20%] sm:object-[center_24%] lg:object-[center_26%]"
                 />
               </ImageReveal>
@@ -287,6 +281,7 @@ export function AcceleratorSection({ onNavigate, onApplyClick }: AcceleratorSect
                       <ResilientImage
                         src={program.image}
                         alt={program.imageAlt}
+                        sizes="(max-width: 768px) 90vw, (max-width: 1024px) 45vw, 405px"
                         className={`h-full w-full object-cover ${program.imagePosition} ${
                           isThirdCard ? 'md:absolute md:inset-0 lg:static' : ''
                         }`}
@@ -338,7 +333,6 @@ export function AcceleratorSection({ onNavigate, onApplyClick }: AcceleratorSect
         description="Connect with AfriYouth regarding cohorts, research fellowships, or ecosystem partnerships."
         actionLabel="Contact AfriYouth"
         targetPage="contact"
-        onNavigate={onNavigate}
       />
     </div>
   );

@@ -8,8 +8,9 @@
   --brand-dark-purple: #0d0624;
   --surface-subtle: #f6f6fa;
   --surface-ink-subtle: #150c36;
-  --font-display: "Poppins", system-ui, -apple-system, sans-serif;
-  --font-body: "Plus Jakarta Sans", "Gilroy", system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-poppins), "Poppins", system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-jakarta-sans), "Plus Jakarta Sans", "Gilroy", system-ui, -apple-system,
+    sans-serif;
 }
 
 @layer base {

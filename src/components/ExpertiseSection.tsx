@@ -1,12 +1,11 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
 import { CORE_SERVICES } from '../data/afriyouthContent';
-import type { PageId } from '../utils/routing';
+import { optimizedImageUrl } from '../lib/images';
 import { BlurReveal, Reveal, SlideReveal } from './MotionPrimitives';
 import { PageBridge, PageHeader } from './PageHeader';
 import SplitText from './SplitText';
-
-interface ExpertiseSectionProps {
-  onNavigate: (page: PageId) => void;
-}
 
 interface NumeralPhotoConfig {
   src: string;
@@ -70,6 +69,9 @@ const NUMERAL_PHOTOS: Record<string, NumeralPhotoConfig> = {
   },
 };
 
+// Numerals never render wider than 430 CSS px, so 828w covers high-density screens.
+const NUMERAL_PHOTO_WIDTH = 828;
+
 function MaskedServiceNumeral({
   numeral,
   serviceId,
@@ -79,9 +81,37 @@ function MaskedServiceNumeral({
 }) {
   const clipId = `service-numeral-clip-${serviceId}`;
   const photo = NUMERAL_PHOTOS[serviceId] ?? NUMERAL_PHOTOS['research-evidence'];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [photoReady, setPhotoReady] = useState(false);
+
+  // SVG <image> has no native lazy loading, so the photo is only requested once
+  // the numeral approaches the viewport. Until then the numeral keeps its solid
+  // brand-navy fill, which reads as an intentional placeholder.
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return undefined;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      const frame = window.requestAnimationFrame(() => setPhotoReady(true));
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setPhotoReady(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '240px 0px', threshold: 0 }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
+      ref={containerRef}
       aria-hidden="true"
       className="w-full max-w-[340px] sm:max-w-[390px] lg:max-w-[430px] select-none"
     >
@@ -97,7 +127,7 @@ function MaskedServiceNumeral({
               y="130"
               textAnchor="middle"
               dominantBaseline="central"
-              fontFamily="'Poppins', sans-serif"
+              className="font-display"
               fontWeight="800"
               fontSize="246"
               letterSpacing="-14"
@@ -109,14 +139,16 @@ function MaskedServiceNumeral({
 
         <g clipPath={`url(#${clipId})`}>
           <rect x="0" y="0" width="420" height="240" fill="#0D0624" />
-          <image
-            href={photo.src}
-            x={photo.x}
-            y={photo.y}
-            width={photo.width}
-            height={photo.height}
-            preserveAspectRatio={photo.preserveAspectRatio}
-          />
+          {photoReady && (
+            <image
+              href={optimizedImageUrl(photo.src, NUMERAL_PHOTO_WIDTH)}
+              x={photo.x}
+              y={photo.y}
+              width={photo.width}
+              height={photo.height}
+              preserveAspectRatio={photo.preserveAspectRatio}
+            />
+          )}
           <rect x="0" y="0" width="420" height="240" fill="#0D0624" fillOpacity="0.14" />
         </g>
       </svg>
@@ -124,7 +156,7 @@ function MaskedServiceNumeral({
   );
 }
 
-export function ExpertiseSection({ onNavigate }: ExpertiseSectionProps) {
+export function ExpertiseSection() {
   return (
     <div className="bg-white text-[#0D0624]">
       <PageHeader
@@ -135,7 +167,6 @@ export function ExpertiseSection({ onNavigate }: ExpertiseSectionProps) {
         image="/images/vr-experience.jpg"
         imageAlt="Young African researcher conducting precision diagnostics and applied research"
         imagePosition="object-[center_20%]"
-        onNavigate={onNavigate}
       />
 
       {/* Editorial Alternating Numbered Service Rows */}
@@ -231,7 +262,6 @@ export function ExpertiseSection({ onNavigate }: ExpertiseSectionProps) {
         description="Explore the AfriYouth Innovation Accelerator, Policy Innovation Challenge, and Career Academy."
         actionLabel="Explore Programs"
         targetPage="programs"
-        onNavigate={onNavigate}
       />
     </div>
   );

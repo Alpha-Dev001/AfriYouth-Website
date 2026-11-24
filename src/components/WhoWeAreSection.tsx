@@ -1,8 +1,10 @@
+'use client';
+
 import { useState } from 'react';
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { MISSION_AND_VISION } from '../data/afriyouthContent';
-import type { PageId } from '../utils/routing';
+import { getPathForPage } from '../utils/routing';
 import {
   FRAMER_EASE,
   ImageReveal,
@@ -11,13 +13,10 @@ import {
   RevealStagger,
   SlideReveal,
 } from './MotionPrimitives';
+import { MotionLink } from './MotionLink';
 import { PageBridge, PageHeader } from './PageHeader';
 import { ResilientImage } from './ResilientImage';
 import SplitText from './SplitText';
-
-interface WhoWeAreSectionProps {
-  onNavigate: (page: PageId) => void;
-}
 
 type IdentityTabId = 'mission' | 'vision' | 'approach';
 
@@ -68,7 +67,7 @@ const INTEGRATED_SEQUENCE = [
   { label: 'Measure & Scale', detail: 'Disciplined M&E learning and broader adoption' },
 ];
 
-export function WhoWeAreSection({ onNavigate }: WhoWeAreSectionProps) {
+export function WhoWeAreSection() {
   const [activeTab, setActiveTab] = useState<IdentityTabId>('mission');
   const currentTab = IDENTITY_TABS.find((t) => t.id === activeTab) ?? IDENTITY_TABS[0];
 
@@ -82,7 +81,6 @@ export function WhoWeAreSection({ onNavigate }: WhoWeAreSectionProps) {
         image="/images/vr-innovation.jpg"
         imageAlt="Young African specialist sketching concepts on a digital tablet while wearing spatial hardware in a studio"
         imagePosition="object-[center_24%]"
-        onNavigate={onNavigate}
       />
 
       {/* Section 1: Layered Overlap Photo Composition + Authoritative Background Split */}
@@ -96,6 +94,7 @@ export function WhoWeAreSection({ onNavigate }: WhoWeAreSectionProps) {
                   <ResilientImage
                     src="/images/team-startup.jpg"
                     alt="Smiling young African innovator holding a Start Up notebook with collaborators"
+                    sizes="(max-width: 1024px) 70vw, 426px"
                     className="h-full w-full object-cover object-[center_26%]"
                   />
                 </div>
@@ -104,6 +103,7 @@ export function WhoWeAreSection({ onNavigate }: WhoWeAreSectionProps) {
                   <ResilientImage
                     src="/images/vr-experience.jpg"
                     alt="Young African researcher testing electronic laboratory instrumentation"
+                    sizes="(max-width: 1024px) 50vw, 291px"
                     className="h-full w-full object-cover object-[center_22%]"
                   />
                 </div>
@@ -155,12 +155,11 @@ export function WhoWeAreSection({ onNavigate }: WhoWeAreSectionProps) {
               </RevealStagger>
 
               <Reveal delay={0.18} className="mt-8">
-                <motion.button
-                  type="button"
+                <MotionLink
+                  href={getPathForPage('services')}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.18 }}
-                  onClick={() => onNavigate('services')}
                   className="group inline-flex min-h-[46px] items-center gap-2 rounded-full bg-[#0D0624] px-6 py-2.5 font-display text-sm font-semibold text-white hover:bg-[#0301FF] transition-colors cursor-pointer whitespace-nowrap"
                 >
                   <span>Explore Our Services</span>
@@ -168,7 +167,7 @@ export function WhoWeAreSection({ onNavigate }: WhoWeAreSectionProps) {
                     className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                     aria-hidden="true"
                   />
-                </motion.button>
+                </MotionLink>
               </Reveal>
             </SlideReveal>
           </div>
@@ -272,6 +271,7 @@ export function WhoWeAreSection({ onNavigate }: WhoWeAreSectionProps) {
                 <ResilientImage
                   src="/images/team-collaboration.jpg"
                   alt="Young African innovator testing virtual reality tools inside an innovation studio"
+                  sizes="(max-width: 1024px) 90vw, 520px"
                   className="h-full w-full object-cover object-[center_18%]"
                 />
               </ImageReveal>
@@ -286,7 +286,6 @@ export function WhoWeAreSection({ onNavigate }: WhoWeAreSectionProps) {
         description="Explore our consulting practices across Research, Policy, Innovation, Foresight, and M&E."
         actionLabel="Explore Services"
         targetPage="services"
-        onNavigate={onNavigate}
       />
     </div>
   );

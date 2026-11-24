@@ -1,4 +1,6 @@
-import { useEffect, useState, type FormEvent } from 'react';
+'use client';
+
+import { useState, type FormEvent } from 'react';
 import { ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
@@ -10,7 +12,6 @@ import {
   type InquiryFormValues,
   type InquiryValidationErrors,
 } from '../utils/inquiryLogic';
-import type { PageId } from '../utils/routing';
 import {
   FRAMER_EASE,
   Reveal,
@@ -22,9 +23,7 @@ import { PageHeader } from './PageHeader';
 import SplitText from './SplitText';
 
 interface ClosingAndFooterProps {
-  selectedAudience: AudienceType;
-  onAudienceChange: (audience: AudienceType) => void;
-  onNavigate: (page: PageId) => void;
+  initialAudience: AudienceType;
 }
 
 const AUDIENCE_LABELS: Record<AudienceType, string> = {
@@ -55,34 +54,19 @@ const ENGAGEMENT_ROUTES: Array<{
   },
 ];
 
-export function ClosingAndFooter({
-  selectedAudience,
-  onAudienceChange,
-  onNavigate,
-}: ClosingAndFooterProps) {
+export function ClosingAndFooter({ initialAudience }: ClosingAndFooterProps) {
   const [values, setValues] = useState<InquiryFormValues>({
     fullName: '',
     organization: '',
     email: '',
-    audience: selectedAudience,
-    topic: getDefaultTopicForAudience(selectedAudience),
+    audience: initialAudience,
+    topic: getDefaultTopicForAudience(initialAudience),
     message: '',
   });
   const [errors, setErrors] = useState<InquiryValidationErrors>({});
   const [submittedRecord, setSubmittedRecord] = useState<InquiryFormValues | null>(null);
 
-  useEffect(() => {
-    setValues((prev) => ({
-      ...prev,
-      audience: selectedAudience,
-      topic: getDefaultTopicForAudience(selectedAudience),
-    }));
-    setErrors({});
-    setSubmittedRecord(null);
-  }, [selectedAudience]);
-
   const handleAudienceSwitch = (nextAudience: AudienceType) => {
-    onAudienceChange(nextAudience);
     setValues((prev) => ({
       ...prev,
       audience: nextAudience,
@@ -107,8 +91,8 @@ export function ClosingAndFooter({
       fullName: '',
       organization: '',
       email: '',
-      audience: selectedAudience,
-      topic: getDefaultTopicForAudience(selectedAudience),
+      audience: initialAudience,
+      topic: getDefaultTopicForAudience(initialAudience),
       message: '',
     });
   };
@@ -125,7 +109,6 @@ export function ClosingAndFooter({
         image="/images/youth-prototyping.jpg"
         imageAlt="Young African engineer soldering and testing electronics prototypes in a studio"
         imagePosition="object-[center_26%]"
-        onNavigate={onNavigate}
       />
 
       {/* Executive Two-Column Contact Desk */}

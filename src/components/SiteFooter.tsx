@@ -1,15 +1,15 @@
-import type { MouseEvent } from 'react';
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ArrowUp, ArrowUpRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { BRAND } from '../data/afriyouthContent';
 import type { AudienceType } from '../utils/inquiryLogic';
-import { getPathForPage, type PageId } from '../utils/routing';
+import { getHrefForPage, parsePathname, type PageId } from '../utils/routing';
+import { MotionLink } from './MotionLink';
 import { BlurReveal, Reveal, RevealItem, RevealStagger } from './MotionPrimitives';
-
-interface SiteFooterProps {
-  currentPage: PageId;
-  onNavigate: (page: PageId, options?: { audience?: AudienceType }) => void;
-}
 
 interface FooterLinkItem {
   label: string;
@@ -56,16 +56,8 @@ const FOOTER_COLUMNS: Array<{ heading: string; links: FooterLinkItem[] }> = [
   },
 ];
 
-export function SiteFooter({ currentPage, onNavigate }: SiteFooterProps) {
-  const handleLinkClick = (
-    event: MouseEvent<HTMLAnchorElement>,
-    page: PageId,
-    audience?: AudienceType
-  ) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    onNavigate(page, audience ? { audience } : undefined);
-  };
+export function SiteFooter() {
+  const currentPage = parsePathname(usePathname() ?? '/');
 
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
@@ -79,17 +71,19 @@ export function SiteFooter({ currentPage, onNavigate }: SiteFooterProps) {
         {/* Top Row: Vertical Stacked Logo First in Top-Left Corner + 4 Structured Link Columns */}
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 pb-12 sm:pb-14">
           <Reveal y={18} className="lg:col-span-4 flex flex-col items-start">
-            <a
-              href={getPathForPage('home')}
-              onClick={(e) => handleLinkClick(e, 'home')}
+            <Link
+              href="/"
               aria-label={`${BRAND.name} — Home`}
               className="group inline-flex flex-col items-start focus-visible:outline-white"
             >
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 border border-white/15 transition-colors duration-200 group-hover:bg-white/15">
-                <img
+                <Image
                   src="/brand/afriyouth-mark.svg"
                   alt=""
                   aria-hidden="true"
+                  width={28}
+                  height={28}
+                  unoptimized
                   className="h-7 w-auto brightness-0 invert"
                 />
               </span>
@@ -99,7 +93,7 @@ export function SiteFooter({ currentPage, onNavigate }: SiteFooterProps) {
                   Innovation Labs
                 </span>
               </span>
-            </a>
+            </Link>
 
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/68">
               Advancing youth-generated evidence, human-centered solutions, and policy reform
@@ -125,16 +119,15 @@ export function SiteFooter({ currentPage, onNavigate }: SiteFooterProps) {
                       (item.label === 'Contact Us' && currentPage === 'contact');
                     return (
                       <li key={item.label}>
-                        <a
-                          href={getPathForPage(item.page)}
-                          onClick={(e) => handleLinkClick(e, item.page, item.audience)}
+                        <Link
+                          href={getHrefForPage(item.page, item.audience)}
                           aria-current={isCurrentRoute ? 'page' : undefined}
                           className={`inline-block transition-[color,transform] duration-150 hover:translate-x-0.5 ${
                             isCurrentRoute ? 'text-white font-semibold' : 'text-white/70 hover:text-white'
                           }`}
                         >
                           {item.label}
-                        </a>
+                        </Link>
                       </li>
                     );
                   })}
@@ -158,9 +151,8 @@ export function SiteFooter({ currentPage, onNavigate }: SiteFooterProps) {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <motion.a
-              href={getPathForPage('contact')}
-              onClick={(e) => handleLinkClick(e, 'contact', 'partner')}
+            <MotionLink
+              href={getHrefForPage('contact', 'partner')}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.18 }}
@@ -171,7 +163,7 @@ export function SiteFooter({ currentPage, onNavigate }: SiteFooterProps) {
                 className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 aria-hidden="true"
               />
-            </motion.a>
+            </MotionLink>
             <motion.button
               type="button"
               onClick={scrollToTop}

@@ -1,3 +1,5 @@
+import type { AudienceType } from './inquiryLogic';
+
 export type PageId = 'home' | 'about' | 'services' | 'programs' | 'contact' | 'not-found';
 
 export interface RouteMeta {
@@ -83,6 +85,15 @@ export function getPathForPage(pageId: PageId): string {
   if (pageId === 'not-found') return '/';
   const matched = ROUTES.find((route) => route.id === pageId);
   return matched ? matched.path : '/';
+}
+
+/**
+ * href for a route, optionally pre-selecting the contact desk audience.
+ * Keeps deep links such as /contact?audience=partner in one place.
+ */
+export function getHrefForPage(pageId: PageId, audience?: AudienceType): string {
+  const path = getPathForPage(pageId);
+  return audience ? `${path}?audience=${audience}` : path;
 }
 
 export function getRouteMeta(pageId: PageId): RouteMeta {

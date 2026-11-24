@@ -1,42 +1,29 @@
-import type { MouseEvent } from 'react';
+'use client';
+
+import Link from 'next/link';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { BRAND } from '../data/afriyouthContent';
-import { getPathForPage } from '../utils/routing';
+import { getHrefForPage } from '../utils/routing';
 import BlurText from './BlurText';
-import { BlurReveal, Reveal } from './MotionPrimitives';
+import { Reveal } from './MotionPrimitives';
 import { ResilientImage } from './ResilientImage';
 
-interface HeroSectionProps {
-  onExploreWork: () => void;
-  onPartnerClick: () => void;
-}
-
-export function HeroSection({ onExploreWork, onPartnerClick }: HeroSectionProps) {
-  const handleExploreClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    onExploreWork();
-  };
+export function HeroSection() {
 
   return (
     <section className="bg-[#FFFFFF] h-[100dvh] min-h-[640px] w-full p-2 sm:p-3">
       <div className="relative h-full w-full overflow-hidden rounded-[18px] sm:rounded-[22px] border border-[#0D0624]/10 bg-[#0D0624] flex flex-col justify-end">
         {/* Reduced-Brightness Official AfriYouth Photograph with Subtle Blur-to-Clear Reveal */}
-        <BlurReveal
-          trigger="load"
-          blurPx={7}
-          distance={0}
-          duration={0.85}
-          delay={0}
-          className="absolute inset-0"
-        >
+        {/* Painted immediately: no load-time reveal, so the hero never shows the page background. */}
+        <div className="absolute inset-0">
           <ResilientImage
             src="/images/electronics-innovation.jpg"
             alt="African youth engineers and researchers collaborating outdoors beneath clean energy solar panels"
             loading="eager"
+            preload
             className="h-full w-full object-cover object-[center_top] sm:object-[64%_18%] brightness-[0.76] contrast-[1.06]"
           />
-        </BlurReveal>
+        </div>
 
         {/* Protective Indigo Tone & Directional Vignette Scrims */}
         <div
@@ -96,23 +83,21 @@ export function HeroSection({ onExploreWork, onPartnerClick }: HeroSectionProps)
 
               <Reveal trigger="load" y={18} delay={0.28} duration={0.55}>
                 <div className="mt-6 sm:mt-7 flex flex-wrap items-center gap-3.5">
-                  <a
-                    href={getPathForPage('services')}
-                    onClick={handleExploreClick}
+                  <Link
+                    href={getHrefForPage('services')}
                     className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-[#0301FF] px-6 py-3 font-display text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#0200A7] whitespace-nowrap shrink-0"
                   >
                     <span>Explore Our Services</span>
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </a>
+                  </Link>
 
-                  <button
-                    type="button"
-                    onClick={onPartnerClick}
+                  <Link
+                    href={getHrefForPage('contact', 'partner')}
                     className="inline-flex min-h-[48px] items-center gap-1.5 rounded-full border border-white/30 bg-[#0D0624]/45 backdrop-blur-md px-5 py-3 font-display text-sm font-semibold text-white hover:bg-white hover:text-[#0D0624] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                   >
                     <span>Partner With Us</span>
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </button>
+                  </Link>
                 </div>
               </Reveal>
             </div>

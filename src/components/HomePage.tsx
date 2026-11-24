@@ -1,4 +1,7 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import {
   motion,
@@ -8,9 +11,9 @@ import {
   useSpring,
   useTransform,
 } from 'motion/react';
-import type { AudienceType } from '../utils/inquiryLogic';
 import { getPathForPage, type PageId } from '../utils/routing';
 import { HeroSection } from './HeroSection';
+import { MotionLink } from './MotionLink';
 import {
   ImageReveal,
   Reveal,
@@ -20,10 +23,6 @@ import {
 } from './MotionPrimitives';
 import { ResilientImage } from './ResilientImage';
 import SplitText from './SplitText';
-
-interface HomePageProps {
-  onNavigate: (page: PageId, options?: { audience?: AudienceType }) => void;
-}
 
 const CORE_PRACTICE_CARDS = [
   {
@@ -102,7 +101,7 @@ const EXPLORE_PATHWAYS: Array<{
   },
 ];
 
-export function HomePage({ onNavigate }: HomePageProps) {
+export function HomePage() {
   const prefersReducedMotion = useReducedMotion();
   const horizontalTrackRef = useRef<HTMLElement>(null);
   const railViewportRef = useRef<HTMLDivElement>(null);
@@ -154,16 +153,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
     setActiveCardIdx(idx);
   });
 
-  const handleRouteLink = (
-    event: MouseEvent<HTMLAnchorElement>,
-    page: PageId,
-    audience?: AudienceType
-  ) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    onNavigate(page, audience ? { audience } : undefined);
-  };
-
   const scrollToPracticeCard = (targetIdx: number) => {
     const section = horizontalTrackRef.current;
     if (!section) return;
@@ -180,10 +169,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
   return (
     <div className="bg-white">
-      <HeroSection
-        onExploreWork={() => onNavigate('services')}
-        onPartnerClick={() => onNavigate('contact', { audience: 'partner' })}
-      />
+      <HeroSection />
 
       {/* Section 2: Clean Editorial Intro Split (Text-First Flow, Side-by-Side From Tablet Up) */}
       <section id="home-overview" className="scroll-mt-20 overflow-x-clip bg-white py-16 sm:py-24 lg:py-28">
@@ -240,9 +226,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
               <Reveal delay={0.2}>
                 <div className="mt-8 flex flex-wrap items-center gap-5">
-                  <motion.a
+                  <MotionLink
                     href={getPathForPage('about')}
-                    onClick={(e) => handleRouteLink(e, 'about')}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.18 }}
@@ -253,10 +238,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
                       className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                       aria-hidden="true"
                     />
-                  </motion.a>
-                  <a
+                  </MotionLink>
+                  <Link
                     href={getPathForPage('services')}
-                    onClick={(e) => handleRouteLink(e, 'services')}
                     className="group inline-flex min-h-[46px] items-center gap-1.5 font-display text-sm font-semibold text-[#0D0624] underline underline-offset-4 decoration-[#0D0624]/25 hover:text-[#0301FF] hover:decoration-[#0301FF] transition-colors whitespace-nowrap"
                   >
                     <span>Our Services</span>
@@ -264,7 +248,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                       className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
                       aria-hidden="true"
                     />
-                  </a>
+                  </Link>
                 </div>
               </Reveal>
             </SlideReveal>
@@ -274,6 +258,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 <ResilientImage
                   src="/images/team-startup.jpg"
                   alt="Smiling young African innovator holding a Start Up notebook with collaborators in a workspace"
+                  sizes="(max-width: 768px) 90vw, (max-width: 1320px) 40vw, 440px"
                   className="h-full w-full object-cover object-[center_26%]"
                 />
               </ImageReveal>
@@ -339,15 +324,15 @@ export function HomePage({ onNavigate }: HomePageProps) {
               }`}
             >
               {CORE_PRACTICE_CARDS.map((card) => (
-                <a
+                <Link
                   key={card.id}
                   href={getPathForPage('services')}
-                  onClick={(e) => handleRouteLink(e, 'services')}
                   className="group isolate relative flex h-[300px] sm:h-[335px] lg:h-[min(48vh,385px)] w-[280px] sm:w-[340px] lg:w-[405px] shrink-0 flex-col justify-end overflow-hidden rounded-[22px] border border-[#0D0624]/12 bg-[#0D0624] [transform:translateZ(0)]"
                 >
                   <ResilientImage
                     src={card.image}
                     alt={card.imageAlt}
+                    sizes="(max-width: 640px) 280px, (max-width: 1024px) 340px, 405px"
                     className={`absolute inset-0 h-full w-full object-cover brightness-[0.86] transition-[filter] duration-300 group-hover:brightness-[0.94] ${card.imagePosition}`}
                   />
                   <div
@@ -374,7 +359,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                       </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               ))}
             </motion.div>
           </div>
@@ -396,9 +381,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
           <RevealStagger className="mt-8 sm:mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
             {EXPLORE_PATHWAYS.map((item) => (
               <RevealItem key={item.page} className="flex">
-                <a
+                <Link
                   href={getPathForPage(item.page)}
-                  onClick={(e) => handleRouteLink(e, item.page)}
                   className="group flex w-full flex-col justify-between rounded-[20px] border border-[#0D0624]/10 bg-white p-7 sm:p-8 hover:border-[#0D0624]/28 hover:bg-[#F7F7FA]/65 transition-[border-color,background-color] duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0301FF]"
                 >
                   <div>
@@ -426,7 +410,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                       <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </span>
                   </div>
-                </a>
+                </Link>
               </RevealItem>
             ))}
           </RevealStagger>

@@ -1,13 +1,11 @@
-import type { MouseEvent } from 'react';
+'use client';
+
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
-import type { PageId } from '../utils/routing';
-import { getPathForPage } from '../utils/routing';
-import {
-  BlurReveal,
-  FRAMER_EASE,
-  SlideReveal,
-} from './MotionPrimitives';
+import { getPathForPage, type PageId } from '../utils/routing';
+import { FRAMER_EASE, SlideReveal } from './MotionPrimitives';
+import { MotionLink } from './MotionLink';
 import { ResilientImage } from './ResilientImage';
 import SplitText from './SplitText';
 
@@ -19,7 +17,6 @@ interface PageHeaderProps {
   image?: string | null;
   imageAlt?: string;
   imagePosition?: string;
-  onNavigate: (page: PageId) => void;
 }
 
 export function PageHeader({
@@ -30,33 +27,21 @@ export function PageHeader({
   image = '/images/electronics-innovation.jpg',
   imageAlt = 'AfriYouth Innovation Labs research and innovation teams in action',
   imagePosition = 'object-[center_25%]',
-  onNavigate,
 }: PageHeaderProps) {
-  const handleHomeClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    onNavigate('home');
-  };
-
   return (
     <section className="relative flex min-h-[380px] sm:min-h-[450px] lg:min-h-[520px] w-full flex-col justify-end overflow-hidden bg-[#0D0624] text-white">
       {image ? (
         <>
-          <BlurReveal
-            trigger="load"
-            blurPx={6}
-            distance={0}
-            duration={0.78}
-            delay={0}
-            className="pointer-events-none absolute inset-0"
-          >
+          {/* Painted immediately: no load-time reveal, so the header never flashes the page background. */}
+          <div className="pointer-events-none absolute inset-0">
             <ResilientImage
               src={image}
               alt={imageAlt}
               loading="eager"
+              preload
               className={`h-full w-full object-cover brightness-[0.88] contrast-[1.04] ${imagePosition}`}
             />
-          </BlurReveal>
+          </div>
 
           <div
             aria-hidden="true"
@@ -98,13 +83,9 @@ export function PageHeader({
         >
           <ol className="flex items-center gap-2 text-xs font-medium text-white/75">
             <li>
-              <a
-                href={getPathForPage('home')}
-                onClick={handleHomeClick}
-                className="hover:text-white transition-colors"
-              >
+              <Link href={getPathForPage('home')} className="hover:text-white transition-colors">
                 Home
-              </a>
+              </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li aria-current="page" className="text-white font-semibold">
@@ -156,7 +137,6 @@ interface PageBridgeProps {
   description: string;
   actionLabel: string;
   targetPage: PageId;
-  onNavigate: (page: PageId) => void;
 }
 
 export function PageBridge({
@@ -165,7 +145,6 @@ export function PageBridge({
   description,
   actionLabel,
   targetPage,
-  onNavigate,
 }: PageBridgeProps) {
   return (
     <div className="border-t border-[#0D0624]/10 bg-[#F7F7FA] py-12 sm:py-16 text-[#0D0624] overflow-x-clip">
@@ -181,13 +160,8 @@ export function PageBridge({
         </SlideReveal>
 
         <SlideReveal direction="right" distance={20} delay={0.08} className="shrink-0">
-          <motion.a
+          <MotionLink
             href={getPathForPage(targetPage)}
-            onClick={(e) => {
-              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-              e.preventDefault();
-              onNavigate(targetPage);
-            }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.18 }}
@@ -198,7 +172,7 @@ export function PageBridge({
               className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
               aria-hidden="true"
             />
-          </motion.a>
+          </MotionLink>
         </SlideReveal>
       </div>
     </div>
