@@ -99,7 +99,7 @@ export function HeroSection({ onExploreWork, onPartnerClick }: HeroSectionProps)
                   <a
                     href={getPathForPage('services')}
                     onClick={handleExploreClick}
-                    className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-[#0301FF] px-6 py-3 font-display text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#0200A7] shadow-[0_14px_30px_-8px_rgba(3,1,255,0.65)] whitespace-nowrap shrink-0"
+                    className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-[#0301FF] px-6 py-3 font-display text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#0200A7] whitespace-nowrap shrink-0"
                   >
                     <span>Explore Our Services</span>
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -108,7 +108,7 @@ export function HeroSection({ onExploreWork, onPartnerClick }: HeroSectionProps)
                   <button
                     type="button"
                     onClick={onPartnerClick}
-                    className="inline-flex min-h-[48px] items-center gap-1.5 rounded-full border border-white/30 bg-[#0D0624]/45 backdrop-blur-md px-5 py-3 font-display text-sm font-semibold text-white hover:bg-white hover:text-[#0D0624] transition-colors shadow-[0_12px_28px_-10px_rgba(0,0,0,0.55)] whitespace-nowrap shrink-0 cursor-pointer"
+                    className="inline-flex min-h-[48px] items-center gap-1.5 rounded-full border border-white/30 bg-[#0D0624]/45 backdrop-blur-md px-5 py-3 font-display text-sm font-semibold text-white hover:bg-white hover:text-[#0D0624] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                   >
                     <span>Partner With Us</span>
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -121,7 +121,7 @@ export function HeroSection({ onExploreWork, onPartnerClick }: HeroSectionProps)
               <a
                 href="#home-overview"
                 aria-label="Scroll to overview"
-                className="hidden lg:inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-[#0D0624]/45 backdrop-blur-md text-white/85 hover:bg-white hover:text-[#0D0624] transition-colors shadow-[0_10px_24px_-8px_rgba(0,0,0,0.5)] shrink-0"
+                className="hidden lg:inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-[#0D0624]/45 backdrop-blur-md text-white/85 hover:bg-white hover:text-[#0D0624] transition-colors shrink-0"
               >
                 <ArrowDown className="h-4 w-4" aria-hidden="true" />
               </a>
