@@ -1,0 +1,36 @@
+{
+  "name": "afriyouth-innovation-labs",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AfriYouth Innovation Labs — research, innovation and policy consulting platform.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port=3000 --host",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "test": "node --test src/utils/*.test.ts",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "gsap": "^3.15.1",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "ogl": "^1.0.11",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^8.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "autoprefixer": "^10.4.21",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2"
+  }
+}
