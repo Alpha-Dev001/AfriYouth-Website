@@ -65,7 +65,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`scroll-smooth ${poppins.variable} ${plusJakartaSans.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`scroll-smooth ${poppins.variable} ${plusJakartaSans.variable}`}
+    >
       <body className="bg-white text-[#0D0624] antialiased selection:bg-[#0301FF] selection:text-white">
         <MotionProvider>
           <ScrollToTop />
